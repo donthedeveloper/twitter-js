@@ -19,7 +19,7 @@ module.exports = function makeRouterWithSockets (io) {
     client.query(queries.selectAllTweets(), (err, result) => {
         if (err) return next(err);
         var tweets = result.rows;
-        console.log(tweets);
+        // console.log(tweets);
         res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
     });
   }
@@ -41,7 +41,7 @@ module.exports = function makeRouterWithSockets (io) {
     client.query(queries.selectUserTweets(username), (err, result) => {
         if (err) return next(err);
         var tweets = result.rows;
-        console.log(tweets);
+
         res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
     });
   });
@@ -52,15 +52,34 @@ module.exports = function makeRouterWithSockets (io) {
       client.query(queries.selectTweet(tweetid), (err, result) => {
             if(err) return next(err);
             var tweets = result.rows;
-            console.log(tweets);
+            // console.log(tweets);
             res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
       })
   });
 
   // create a new tweet
   router.post('/tweets', function(req, res, next){
-    var newTweet = tweetBank.add(req.body.name, req.body.text);
-    io.sockets.emit('new_tweet', newTweet);
+    // var newTweet = tweetBank.add(req.body.name, req.body.text);
+    // io.sockets.emit('new_tweet', newTweet);
+
+    var username = req.body.name;
+
+    client.query(queries.doesUserExist(username), (err, result) => {
+        if (err) return next(err);
+        var users = result.rows;
+
+        console.log('THIS IS USERS', users);
+        console.log(req.body.text);
+
+        if (users.length) {
+            client.query(queries.insertTweet(users.id, req.body.text), (err, result) => {
+
+            });
+        }
+
+        // res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
+    });
+
     res.redirect('/');
   });
 

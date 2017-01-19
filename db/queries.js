@@ -24,12 +24,19 @@ const selectTweet = (id) => {
     return 'SELECT tweets.*, users.name, users.picture_url FROM tweets INNER JOIN users ON tweets.user_id = users.id WHERE tweets.id =' + id;
 };
 
+const doesUserExist = (username) => {
+    return "SELECT * FROM users WHERE name ='" + username + "'";
+};
 
+const insertTweet = (userId, content) => {
+    return `INSERT INTO tweets (user_id, content) VALUES (${userId}, '${content}')`;
+};
 
 
 module.exports = {
     selectAllTweets: selectAllTweets,
     selectUserTweets: selectUserTweets,
-    selectTweet: selectTweet
-
+    selectTweet: selectTweet,
+    doesUserExist: doesUserExist,
+    insertTweet: insertTweet
 }
