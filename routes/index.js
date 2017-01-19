@@ -19,6 +19,7 @@ module.exports = function makeRouterWithSockets (io) {
     client.query(queries.selectAllTweets(), (err, result) => {
         if (err) return next(err);
         var tweets = result.rows;
+        console.log(tweets);
         res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
     });
   }
@@ -37,10 +38,10 @@ module.exports = function makeRouterWithSockets (io) {
     //   username: req.params.username
     // });
     var username = req.params.username;
-    console.log(username);
     client.query(queries.selectUserTweets(username), (err, result) => {
         if (err) return next(err);
         var tweets = result.rows;
+        console.log(tweets);
         res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
     });
   });
@@ -48,11 +49,10 @@ module.exports = function makeRouterWithSockets (io) {
   // single-tweet page
   router.get('/tweets/:id', function(req, res, next){
       var tweetid = req.params.id;
-      console.log(tweetid);
       client.query(queries.selectTweet(tweetid), (err, result) => {
             if(err) return next(err);
             var tweets = result.rows;
-//            console.log(tweetid);
+            console.log(tweets);
             res.render('index', {title: 'Twitter.js', tweets: tweets, showForm: true});
       })
   });
